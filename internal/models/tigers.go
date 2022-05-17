@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -11,6 +12,14 @@ type Tiger struct {
 	IsActive       bool      `json:"is_active"`
 	CreatedAt      time.Time
 	TigerSightings []TigerSighting `json:"tiger_sightings"`
+}
+
+func (tiger Tiger) CheckExistingTiger(DB *gorm.DB) (error, Tiger) {
+	res := DB.Where("name = ?", tiger.Name).Take(&tiger)
+	if res.Error != nil {
+		return res.Error, tiger
+	}
+	return nil, tiger
 }
 
 type TigerSighting struct {
