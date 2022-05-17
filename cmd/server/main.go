@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
+	"tigerhallProject/internal/models"
 	"time"
 
 	//_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres"
@@ -62,8 +63,16 @@ func main() {
 	engine := gin.New()
 	config := common.NewConfig(*configFilePtr)
 
-	MustCreateServer(config)
+	server := MustCreateServer(config)
 
+	err := server.DB.AutoMigrate(&models.Tiger{})
+	err = server.DB.AutoMigrate(&models.TigerSighting{})
+	err = server.DB.AutoMigrate(&models.TigerSightingImage{})
+	if err != nil {
+		fmt.Println("Migration failed")
+	} else {
+		fmt.Println("Migration Success")
+	}
 	AddKnockKnock(engine)
 	s := &http.Server{
 		Addr:           ":" + strconv.FormatUint(config.Server.Port, 10),
