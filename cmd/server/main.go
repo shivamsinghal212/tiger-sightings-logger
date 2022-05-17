@@ -14,21 +14,6 @@ import (
 	"time"
 )
 
-//type ServerResources struct {
-//	DB     *gorm.DB
-//	Writer http.ResponseWriter
-//}
-//
-//type Server struct {
-//	ServerResources
-//}
-//
-//func NewServer(res ServerResources) *Server {
-//	return &Server{
-//		ServerResources: res,
-//	}
-//}
-
 func MustCreatePgConnection(config common.Config) *gorm.DB {
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
