@@ -21,4 +21,10 @@ func TestAddNewTiger(t *testing.T) {
 			1652819764)
 		assert.Equal(t, statusMsg, fmt.Sprintf("%s already exists.", tiger.Name))
 	})
+	t.Run("when adding incorrect DOB for tiger", func(t *testing.T) {
+		defer resetDB()
+		statusMsg, _ := AddNewTiger(postgresDB, "test1", "20-01-2002", 1.9001918, 2.9277827,
+			1652819764)
+		assert.Equal(t, statusMsg, "Incorrect Date Format")
+	})
 }
