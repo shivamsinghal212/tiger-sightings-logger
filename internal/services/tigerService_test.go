@@ -64,3 +64,32 @@ func TestGetAllTigers(t *testing.T) {
 
 	})
 }
+
+func TestGetAllSightings(t *testing.T) {
+	t.Run("when three tiger sightings are present for exiting tiger", func(t *testing.T) {
+		defer resetDB()
+		AddNewTiger(postgresDB, "Extra Tiger", "2001-01-02", 1.9001918, 2.9277827,
+			1652819764)
+		_, tigerObj := AddNewTiger(postgresDB, "test1", "2001-01-02", 1.9001918, 2.9277827,
+			1652819764)
+		AddNewTigerSighting(postgresDB, tigerObj.ID, 1.9001213, 2.9277789,
+			1652819764)
+		AddNewTigerSighting(postgresDB, tigerObj.ID, 1.9001213, 2.9277789,
+			1652819790)
+		data := GetAllSightings(postgresDB, c, tigerObj.ID)
+		assert.Equal(t, 3, len(data))
+	})
+	t.Run("when any tiger sightings are present for exiting tiger and tiger id is zero", func(t *testing.T) {
+		defer resetDB()
+		AddNewTiger(postgresDB, "Extra Tiger", "2001-01-02", 1.9001918, 2.9277827,
+			1652819764)
+		_, tigerObj := AddNewTiger(postgresDB, "test1", "2001-01-02", 1.9001918, 2.9277827,
+			1652819764)
+		AddNewTigerSighting(postgresDB, tigerObj.ID, 1.9001213, 2.9277789,
+			1652819764)
+		AddNewTigerSighting(postgresDB, tigerObj.ID, 1.9001213, 2.9277789,
+			1652819790)
+		data := GetAllSightings(postgresDB, c, 0)
+		assert.Equal(t, 0, len(data))
+	})
+}

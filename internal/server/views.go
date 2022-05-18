@@ -65,3 +65,16 @@ func (s *Server) GetAllTigers(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": tigers})
 
 }
+
+func (s *Server) GetAllTigerSightings(c *gin.Context) {
+	tigerId := c.Param("tigerId")
+	tigerIdInt, err := strconv.Atoi(tigerId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	tigers := services.GetAllSightings(s.DB, c, uint(tigerIdInt))
+	c.JSON(http.StatusOK, gin.H{"data": tigers})
+}

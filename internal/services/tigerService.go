@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// Paginate reference: https://gorm.io/docs/scopes.html#pagination
 func Paginate(c *gin.Context) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		page, _ := strconv.Atoi(c.Query("page"))
@@ -99,6 +100,27 @@ func GetAllTigers(DB *gorm.DB, c *gin.Context) []GetAllTigersResp {
 	return resp
 }
 
-func ListAllSightings() {
+type GetAllTigerSightingsResp struct {
+	TigerId   uint    `json:"tiger_id"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+	SightDate string  `json:"sight_date"`
+}
 
+func GetAllSightings(DB *gorm.DB, c *gin.Context, tigerId uint) []GetAllTigerSightingsResp {
+	var resp []GetAllTigerSightingsResp
+	if tigerId == 0 {
+		return resp
+	}
+	var tigerSightings []models.TigerSighting
+	DB.Scopes(Paginate(c)).Where(&models.TigerSighting{TigerID: tigerId}).Order("sight_date desc").Find(&tigerSightings)
+	for _, v := range tigerSightings {
+		resp = append(resp, GetAllTigerSightingsResp{
+			TigerId:   v.TigerID,
+			Latitude:  v.Latitude,
+			Longitude: v.Longitude,
+			SightDate: v.SightDate.Format("2006-01-02 15:04:05"),
+		})
+	}
+	return resp
 }
