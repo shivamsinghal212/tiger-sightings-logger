@@ -44,6 +44,7 @@ type TigerSighting struct {
 }
 
 type TigerSightingImage struct {
-	ID              uint `json:"id" gorm:"primary_key;autoIncrement"`
-	TigerSightingID uint `json:"tiger_sighting_id"`
+	ID              uint   `json:"id" gorm:"primary_key;autoIncrement"`
+	TigerSightingID uint   `json:"tiger_sighting_id"`
+	ImageURL        string `json:"image_url"`
 }

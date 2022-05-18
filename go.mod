@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/BurntSushi/toml v1.1.0
 	github.com/gin-gonic/gin v1.7.7
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/stretchr/testify v1.7.0
 	gorm.io/driver/postgres v1.3.5
 	gorm.io/gorm v1.23.5

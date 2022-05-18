@@ -31,11 +31,11 @@ func Paginate(c *gin.Context) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func logTigerSighting(DB *gorm.DB, existingTiger models.Tiger, lastSeenTime time.Time, latitude float64, longitude float64) {
+func logTigerSighting(DB *gorm.DB, existingTiger models.Tiger, lastSeenTime time.Time, latitude float64, longitude float64, image string) {
 	DB.First(&existingTiger)
 	existingTiger.LastSeenOn = lastSeenTime
 	existingTiger.TigerSightings = []models.TigerSighting{{Latitude: latitude, Longitude: longitude,
-		SightDate: lastSeenTime}}
+		SightDate: lastSeenTime, TigerSightingImages: []models.TigerSightingImage{{ImageURL: image}}}}
 	DB.Save(&existingTiger)
 }
 
@@ -61,19 +61,19 @@ func AddNewTiger(DB *gorm.DB, name string, dob string, latitude float64, longitu
 		panic(err)
 	}
 
-	logTigerSighting(DB, existingTiger, lastSeenTime, latitude, longitude)
+	logTigerSighting(DB, existingTiger, lastSeenTime, latitude, longitude, "")
 
 	return fmt.Sprintf("%s already exists.", name), &existingTiger
 }
 
-func AddNewTigerSighting(DB *gorm.DB, tigerId uint, latitude float64, longitude float64, lastSeen uint) string {
+func AddNewTigerSighting(DB *gorm.DB, tigerId uint, latitude float64, longitude float64, lastSeen uint, image string) string {
 	obj := models.Tiger{ID: tigerId}
 	err, existingTiger := obj.CheckExistingTigerById(DB)
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return fmt.Sprintf("Invalid Tiger ID %d", tigerId)
 	}
 	lastSeenTime := time.Unix(int64(lastSeen), 0)
-	logTigerSighting(DB, existingTiger, lastSeenTime, latitude, longitude)
+	logTigerSighting(DB, existingTiger, lastSeenTime, latitude, longitude, image)
 	return fmt.Sprintf("Tiger Sighting Logged")
 }
 
