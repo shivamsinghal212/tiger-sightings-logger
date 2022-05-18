@@ -4,8 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"github.com/BurntSushi/toml"
+	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"net/http/httptest"
 
 	"os"
 	"testing"
@@ -13,6 +15,7 @@ import (
 )
 
 var postgresDB *gorm.DB
+var c *gin.Context
 
 //var userService *UserService
 var configFile = flag.String("config-file", "../../configs/test.toml", "Config file to use")
@@ -21,6 +24,7 @@ func TestMain(m *testing.M) {
 	flag.Parse()
 	var err error
 	MustSetDb()
+	c, _ = gin.CreateTestContext(httptest.NewRecorder())
 	//logger, err := zap.NewDevelopment()
 	if err != nil {
 		panic(err)
@@ -33,6 +37,7 @@ func TestMain(m *testing.M) {
 }
 
 func MustSetDb() {
+
 	var err error
 	var conf struct {
 		Database struct {
@@ -56,7 +61,6 @@ func MustSetDb() {
 		5432)
 
 	postgresDB, err = gorm.Open(postgres.New(postgres.Config{DSN: dsn}))
-	//fmt.Println("POSTGRESS", &postgresDB)
 	if err != nil {
 		fmt.Println("failed setting up postgres connection")
 	}

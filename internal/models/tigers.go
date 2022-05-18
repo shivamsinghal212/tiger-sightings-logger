@@ -11,11 +11,23 @@ type Tiger struct {
 	Dob            time.Time `json:"dob" validate:"required"`
 	IsActive       bool      `json:"is_active"`
 	CreatedAt      time.Time
+	LastSeenOn     time.Time       `json:"last_seen_on"`
 	TigerSightings []TigerSighting `json:"tiger_sightings"`
 }
 
-func (tiger Tiger) CheckExistingTiger(DB *gorm.DB) (error, Tiger) {
+func (tiger Tiger) GetAllTigersSortedByLastSeen(DB *gorm.DB) {
+
+}
+func (tiger Tiger) CheckExistingTigerByName(DB *gorm.DB) (error, Tiger) {
 	res := DB.Where("name = ?", tiger.Name).Take(&tiger)
+	if res.Error != nil {
+		return res.Error, tiger
+	}
+	return nil, tiger
+}
+
+func (tiger Tiger) CheckExistingTigerById(DB *gorm.DB) (error, Tiger) {
+	res := DB.Where("id = ?", tiger.ID).Take(&tiger)
 	if res.Error != nil {
 		return res.Error, tiger
 	}
@@ -27,7 +39,7 @@ type TigerSighting struct {
 	TigerID             uint                 `json:"tiger_id"`
 	Latitude            float64              `json:"latitude"`
 	Longitude           float64              `json:"longitude"`
-	LastSeen            time.Time            `json:"last_seen"`
+	SightDate           time.Time            `json:"sight_date"`
 	TigerSightingImages []TigerSightingImage `json:"tiger_sighting_images"`
 }
 

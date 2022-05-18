@@ -28,3 +28,39 @@ func TestAddNewTiger(t *testing.T) {
 		assert.Equal(t, statusMsg, "Incorrect Date Format")
 	})
 }
+
+func TestAddNewTigerSighting(t *testing.T) {
+	t.Run("when adding new tiger sighting", func(t *testing.T) {
+		defer resetDB()
+		_, tigerObj := AddNewTiger(postgresDB, "test1", "2001-01-02", 1.9001918, 2.9277827,
+			1652819764)
+		statusMsg := AddNewTigerSighting(postgresDB, tigerObj.ID, 1.9001213, 2.9277789,
+			1652819764)
+		assert.Equal(t, "Tiger Sighting Logged", statusMsg)
+	})
+	t.Run("when adding new tiger sighting to non existent tiger", func(t *testing.T) {
+		defer resetDB()
+		statusMsg := AddNewTigerSighting(postgresDB, 999, 1.9001918, 2.9277827,
+			1652819764)
+		assert.Equal(t, "Invalid Tiger ID 999", statusMsg)
+	})
+}
+
+func TestGetAllTigers(t *testing.T) {
+	t.Run("when no tigers are Added", func(t *testing.T) {
+		defer resetDB()
+		data := GetAllTigers(postgresDB, c)
+		assert.Equal(t, 0, len(data))
+	})
+	t.Run("when tigers are Added, Sorted by last seen desc", func(t *testing.T) {
+		defer resetDB()
+		AddNewTiger(postgresDB, "First", "2001-01-02", 1.9001918, 2.9277827,
+			1652819764)
+		AddNewTiger(postgresDB, "Second", "2001-01-02", 1.9001918, 2.9277827,
+			1652819765)
+		data := GetAllTigers(postgresDB, c)
+		assert.Equal(t, 2, len(data))
+		assert.Equal(t, "Second", data[0].TigerName)
+
+	})
+}

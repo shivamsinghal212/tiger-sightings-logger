@@ -9,4 +9,7 @@ import (
 func AddKnockKnock(engine *gin.Engine, serv *server.Server) {
 	engine.GET("/knockknock", serv.KnockKnock)
 	engine.POST("/api/tiger", serv.AddNewTigerView)
+	engine.POST("/api/tiger-sighting/:tigerId", serv.AddNewTigerSightingView)
+	engine.GET("/api/tigers", serv.GetAllTigers)
+
 }
