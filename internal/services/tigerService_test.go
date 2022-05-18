@@ -35,13 +35,13 @@ func TestAddNewTigerSighting(t *testing.T) {
 		_, tigerObj := AddNewTiger(postgresDB, "test1", "2001-01-02", 1.9001918, 2.9277827,
 			1652819764)
 		statusMsg := AddNewTigerSighting(postgresDB, tigerObj.ID, 1.9001213, 2.9277789,
-			1652819764)
+			1652819764, "")
 		assert.Equal(t, "Tiger Sighting Logged", statusMsg)
 	})
 	t.Run("when adding new tiger sighting to non existent tiger", func(t *testing.T) {
 		defer resetDB()
 		statusMsg := AddNewTigerSighting(postgresDB, 999, 1.9001918, 2.9277827,
-			1652819764)
+			1652819764, "")
 		assert.Equal(t, "Invalid Tiger ID 999", statusMsg)
 	})
 }
@@ -73,9 +73,9 @@ func TestGetAllSightings(t *testing.T) {
 		_, tigerObj := AddNewTiger(postgresDB, "test1", "2001-01-02", 1.9001918, 2.9277827,
 			1652819764)
 		AddNewTigerSighting(postgresDB, tigerObj.ID, 1.9001213, 2.9277789,
-			1652819764)
+			1652819764, "")
 		AddNewTigerSighting(postgresDB, tigerObj.ID, 1.9001213, 2.9277789,
-			1652819790)
+			1652819790, "")
 		data := GetAllSightings(postgresDB, c, tigerObj.ID)
 		assert.Equal(t, 3, len(data))
 	})
@@ -86,9 +86,9 @@ func TestGetAllSightings(t *testing.T) {
 		_, tigerObj := AddNewTiger(postgresDB, "test1", "2001-01-02", 1.9001918, 2.9277827,
 			1652819764)
 		AddNewTigerSighting(postgresDB, tigerObj.ID, 1.9001213, 2.9277789,
-			1652819764)
+			1652819764, "")
 		AddNewTigerSighting(postgresDB, tigerObj.ID, 1.9001213, 2.9277789,
-			1652819790)
+			1652819790, "")
 		data := GetAllSightings(postgresDB, c, 0)
 		assert.Equal(t, 0, len(data))
 	})
