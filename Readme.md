@@ -1,3 +1,5 @@
+[![Go](https://github.com/shivamsinghal212/tiger-sightings-logger/actions/workflows/go.yml/badge.svg?branch=main&event=push)](https://github.com/shivamsinghal212/tiger-sightings-logger/actions/workflows/go.yml)
+
 # **TigerHall Kittens**
 
 ## Project Setup:
